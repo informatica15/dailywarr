@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Game rules live in src/lib/game/rules.ts (pure functions); React state/localStorage persistence in src/lib/game/store.tsx. Why: keeps rules testable and UI-free.
