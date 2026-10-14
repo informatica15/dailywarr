@@ -144,31 +144,31 @@ export function sanitize(raw: unknown): GameState {
   const base = initialState();
   if (!raw || typeof raw !== "object") return base;
   const r = raw as Record<string, unknown>;
-  const quests = Array.isArray(r.quests)
-    ? (r.quests as unknown[]).filter((q): q is Quest => {
+  const quests = Array.isArray(r["quests"])
+    ? (r["quests"] as unknown[]).filter((q): q is Quest => {
         const x = q as Quest;
         return !!x && typeof x.id === "string" && typeof x.title === "string" && typeof x.xp === "number" && x.xp > 0 && (CATEGORIES as readonly string[]).includes(x.category);
       }).map((q) => ({ ...q, recurrence: "daily" as const, createdAt: typeof q.createdAt === "string" ? q.createdAt : todayKey() }))
     : [];
   const ids = new Set(quests.map((q) => q.id));
   const completions: Record<string, number> = {};
-  if (r.completions && typeof r.completions === "object") {
-    for (const [k, v] of Object.entries(r.completions as Record<string, unknown>)) {
+  if (r["completions"] && typeof r["completions"] === "object") {
+    for (const [k, v] of Object.entries(r["completions"] as Record<string, unknown>)) {
       const [qid, date] = k.split("|");
       if (ids.has(qid) && /^\d{4}-\d{2}-\d{2}$/.test(date ?? "") && typeof v === "number" && v > 0) completions[k] = v;
     }
   }
   const achievements: Record<string, string> = {};
-  if (r.achievements && typeof r.achievements === "object") {
-    for (const [k, v] of Object.entries(r.achievements as Record<string, unknown>)) {
+  if (r["achievements"] && typeof r["achievements"] === "object") {
+    for (const [k, v] of Object.entries(r["achievements"] as Record<string, unknown>)) {
       if (ACHIEVEMENTS.some((a) => a.id === k) && typeof v === "string") achievements[k] = v;
     }
   }
   const bonusXp = ACHIEVEMENTS.filter((a) => achievements[a.id]).reduce((t, a) => t + a.reward, 0);
   return {
     version: 1,
-    playerName: typeof r.playerName === "string" && r.playerName.trim() ? r.playerName.slice(0, 40) : base.playerName,
-    avatar: typeof r.avatar === "string" && AVATARS.includes(r.avatar) ? r.avatar : base.avatar,
+    playerName: typeof r["playerName"] === "string" && r["playerName"].trim() ? r["playerName"].slice(0, 40) : base.playerName,
+    avatar: typeof r["avatar"] === "string" && AVATARS.includes(r["avatar"]) ? r["avatar"] : base.avatar,
     quests,
     completions,
     achievements,
