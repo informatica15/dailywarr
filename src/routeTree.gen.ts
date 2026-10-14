@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AchievementsRouteImport } from './routes/achievements'
+import { Route as ArenaRouteImport } from './routes/arena'
 import { Route as HallOfFlamesRouteImport } from './routes/hall-of-flames'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as QuestsRouteImport } from './routes/quests'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArenaRoute = ArenaRouteImport.update({
+  id: '/arena',
+  path: '/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HallOfFlamesRoute = HallOfFlamesRouteImport.update({
@@ -44,6 +50,7 @@ const QuestsRoute = QuestsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/arena': typeof ArenaRoute
   '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/arena': typeof ArenaRoute
   '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
@@ -59,19 +67,33 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/arena': typeof ArenaRoute
   '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/achievements' | '/hall-of-flames' | '/profile' | '/quests'
+  fullPaths:
+    | '/'
+    | '/achievements'
+    | '/arena'
+    | '/hall-of-flames'
+    | '/profile'
+    | '/quests'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/achievements' | '/hall-of-flames' | '/profile' | '/quests'
+  to:
+    | '/'
+    | '/achievements'
+    | '/arena'
+    | '/hall-of-flames'
+    | '/profile'
+    | '/quests'
   id:
     | '__root__'
     | '/'
     | '/achievements'
+    | '/arena'
     | '/hall-of-flames'
     | '/profile'
     | '/quests'
@@ -80,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
+  ArenaRoute: typeof ArenaRoute
   HallOfFlamesRoute: typeof HallOfFlamesRoute
   ProfileRoute: typeof ProfileRoute
   QuestsRoute: typeof QuestsRoute
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/achievements'
       fullPath: '/achievements'
       preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arena': {
+      id: '/arena'
+      path: '/arena'
+      fullPath: '/arena'
+      preLoaderRoute: typeof ArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hall-of-flames': {
@@ -128,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
+  ArenaRoute: ArenaRoute,
   HallOfFlamesRoute: HallOfFlamesRoute,
   ProfileRoute: ProfileRoute,
   QuestsRoute: QuestsRoute,

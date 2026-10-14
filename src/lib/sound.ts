@@ -81,7 +81,7 @@ export function startMusic(volume: number): boolean {
   const step = 6;
   const schedule = () => {
     musicNodes = musicNodes.slice(-24);
-    padChord(CHORDS[i++ % CHORDS.length], c.currentTime, step * 1.6);
+    padChord(CHORDS[i++ % CHORDS.length]!, c.currentTime, step * 1.6);
   };
   schedule();
   musicTimer = setInterval(schedule, step * 1000);
