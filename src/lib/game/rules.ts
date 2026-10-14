@@ -198,7 +198,7 @@ export const BRAIN_REWARDS = {
 
 export function dailyGame(date = todayKey()): GameId {
   const n = date.split("-").reduce((a, p) => a + Number(p), 0);
-  return GAME_IDS[n % GAME_IDS.length];
+  return GAME_IDS[n % GAME_IDS.length]!;
 }
 
 export function brainToday(s: GameState, date = todayKey()) {
@@ -209,7 +209,7 @@ export function brainToday(s: GameState, date = todayKey()) {
 export const reachedMilestone = (game: GameId, score: number) =>
   BRAIN_REWARDS.lowerIsBetter[game] ? score > 0 && score <= BRAIN_REWARDS.milestones[game] : score >= BRAIN_REWARDS.milestones[game];
 
-export interface ClaimResult { ok: boolean; xp: number; reason?: string; milestone?: boolean; daily?: boolean; newBest?: boolean }
+export interface ClaimResult { ok: boolean; xp: number; reason?: string | undefined; milestone?: boolean; daily?: boolean; newBest?: boolean }
 
 /**
  * Records a finished session once. Local-only: this is client-side validation and is not tamper-proof.
