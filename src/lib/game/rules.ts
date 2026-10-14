@@ -155,7 +155,7 @@ export function sanitize(raw: unknown): GameState {
   if (r["completions"] && typeof r["completions"] === "object") {
     for (const [k, v] of Object.entries(r["completions"] as Record<string, unknown>)) {
       const [qid, date] = k.split("|");
-      if (ids.has(qid) && /^\d{4}-\d{2}-\d{2}$/.test(date ?? "") && typeof v === "number" && v > 0) completions[k] = v;
+      if (ids.has(qid ?? "") && /^\d{4}-\d{2}-\d{2}$/.test(date ?? "") && typeof v === "number" && v > 0) completions[k] = v;
     }
   }
   const achievements: Record<string, string> = {};
