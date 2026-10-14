@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AchievementsRouteImport } from './routes/achievements'
+import { Route as HallOfFlamesRouteImport } from './routes/hall-of-flames'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as QuestsRouteImport } from './routes/quests'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const AchievementsRoute = AchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallOfFlamesRoute = HallOfFlamesRouteImport.update({
+  id: '/hall-of-flames',
+  path: '/hall-of-flames',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -38,12 +44,14 @@ const QuestsRoute = QuestsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
 }
@@ -51,20 +59,28 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/achievements': typeof AchievementsRoute
+  '/hall-of-flames': typeof HallOfFlamesRoute
   '/profile': typeof ProfileRoute
   '/quests': typeof QuestsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/achievements' | '/profile' | '/quests'
+  fullPaths: '/' | '/achievements' | '/hall-of-flames' | '/profile' | '/quests'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/achievements' | '/profile' | '/quests'
-  id: '__root__' | '/' | '/achievements' | '/profile' | '/quests'
+  to: '/' | '/achievements' | '/hall-of-flames' | '/profile' | '/quests'
+  id:
+    | '__root__'
+    | '/'
+    | '/achievements'
+    | '/hall-of-flames'
+    | '/profile'
+    | '/quests'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AchievementsRoute: typeof AchievementsRoute
+  HallOfFlamesRoute: typeof HallOfFlamesRoute
   ProfileRoute: typeof ProfileRoute
   QuestsRoute: typeof QuestsRoute
 }
@@ -83,6 +99,13 @@ declare module '@tanstack/react-router' {
       path: '/achievements'
       fullPath: '/achievements'
       preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hall-of-flames': {
+      id: '/hall-of-flames'
+      path: '/hall-of-flames'
+      fullPath: '/hall-of-flames'
+      preLoaderRoute: typeof HallOfFlamesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -105,6 +128,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AchievementsRoute: AchievementsRoute,
+  HallOfFlamesRoute: HallOfFlamesRoute,
   ProfileRoute: ProfileRoute,
   QuestsRoute: QuestsRoute,
 }
