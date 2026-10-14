@@ -308,11 +308,11 @@ export function sanitize(raw: unknown): GameState {
     for (const k of ["musicVolume", "sfxVolume"] as const) if (typeof rs[k] === "number") settings[k] = Math.min(1, Math.max(0, rs[k] as number));
   }
   // v1 profiles already had a board; treat them as seeded so their quests are never altered.
-  const seeded = raw["seeded"] === true || raw["version"] === 1;
+  const seeded = raw["seeded"] === true || (raw["version"] === 1 && quests.length > 0);
   const pn = raw["playerName"];
   return {
     version: 2,
-    playerName: typeof pn === "string" && pn.trim() && pn !== "Adventurer" ? pn.slice(0, 40) : pn === "Adventurer" ? "Adventurer" : base.playerName,
+    playerName: typeof pn === "string" && pn.trim() ? pn.slice(0, 40) : base.playerName,
     avatar: (AVATARS as readonly string[]).includes(String(raw["avatar"])) ? String(raw["avatar"]) : base.avatar,
     specialization: (SPECIALIZATIONS as readonly string[]).includes(String(raw["specialization"])) ? String(raw["specialization"]) : base.specialization,
     seeded, quests, completions, achievements, brain, settings,
