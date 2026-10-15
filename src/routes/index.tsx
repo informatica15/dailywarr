@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Brain, CheckCircle2, Flame, Plus, ScrollText, Sparkles, Trophy, Zap } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Pencil, Check, Brain, CheckCircle2, Flame, Plus, ScrollText, Sparkles, Trophy, Zap } from "lucide-react";
 import { useGame } from "@/lib/game/store";
 import { BRAIN_REWARDS, bestStreak, brainToday, dailyGame, isDone, levelInfo, streak, titleFor, todayKey, totalXp } from "@/lib/game/rules";
 import { Empty, Panel, QuestCard, Stat, XpBar, btnGhost, btnPrimary } from "@/components/game/ui";
@@ -19,7 +20,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
-  const { state, toggle, loaded } = useGame();
+  const { state, toggle, loaded, setProfile } = useGame();
+  const [editing, setEditing] = useState<string | null>(null);
   const xp = totalXp(state);
   const lv = levelInfo(xp);
   const today = todayKey();
@@ -40,7 +42,17 @@ function Dashboard() {
           </div>
           <div className="flex-1">
             <div className="text-sm text-muted-foreground">Every small victory builds a stronger you.</div>
-            <h1 className="mt-1 font-display text-3xl font-bold tracking-tight md:text-4xl">{state.playerName}</h1>
+            {editing === null ? (
+              <div className="mt-1 flex items-center gap-2">
+                <h1 className="min-w-0 truncate font-display text-3xl font-bold tracking-tight md:text-4xl">{state.playerName}</h1>
+                <button onClick={() => setEditing(state.playerName)} aria-label="Edit name" className="rounded-lg p-1.5 text-muted-foreground hover:bg-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><Pencil className="h-4 w-4" /></button>
+              </div>
+            ) : (
+              <form className="mt-1 flex items-center gap-2" onSubmit={(e) => { e.preventDefault(); if (editing.trim()) { setProfile({ name: editing, avatar: state.avatar, specialization: state.specialization }); setEditing(null); } }}>
+                <input autoFocus aria-label="Your name" value={editing} maxLength={40} onChange={(e) => setEditing(e.target.value)} onKeyDown={(e) => e.key === "Escape" && setEditing(null)} className="min-w-0 flex-1 rounded-xl border border-input bg-surface px-3 py-1.5 font-display text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-ring" />
+                <button type="submit" disabled={!editing.trim()} aria-label="Save name" className="rounded-lg bg-primary p-2 text-primary-foreground disabled:opacity-50"><Check className="h-4 w-4" /></button>
+              </form>
+            )}
             <div className="tnum mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
               <span className="font-semibold text-primary">Level {String(lv.level).padStart(2, "0")} — {titleFor(lv.level)}</span>
               <span className="text-muted-foreground">·</span>
@@ -62,7 +74,7 @@ function Dashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-        <Panel title="Today's quests" action={<Link to="/quests" className="inline-flex items-center gap-1 text-sm text-magic hover:underline">Quest Board <ArrowRight className="h-3.5 w-3.5" /></Link>}>
+        <Panel title="Today's Battle" action={<Link to="/quests" className="inline-flex items-center gap-1 text-sm text-magic hover:underline">Quest Board <ArrowRight className="h-3.5 w-3.5" /></Link>}>
           {!loaded ? <div className="h-40 animate-pulse rounded-xl bg-raised/40" /> : active.length === 0 ? (
             <Empty icon={ScrollText} title="No active quests">
               <Link to="/quests" className="mt-3 inline-flex items-center gap-1 text-primary hover:underline"><Plus className="h-4 w-4" /> Create your first quest</Link>

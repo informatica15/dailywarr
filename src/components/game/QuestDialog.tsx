@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CATEGORIES, DIFFICULTIES, type Category, type Difficulty, type Quest } from "@/lib/game/rules";
+import { CATEGORIES, DIFFICULTIES, TAGS, type Category, type Difficulty, type Quest, type Tag } from "@/lib/game/rules";
 import type { QuestInput } from "@/lib/game/store";
 import { btnGhost, btnPrimary, fieldCls } from "./ui";
 
@@ -10,16 +10,18 @@ export function QuestDialog({ open, onOpenChange, quest, onSave }: { open: boole
   const [category, setCategory] = useState<Category>("Knowledge");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [xp, setXp] = useState(20);
+  const [tag, setTag] = useState<Tag>("Consistency");
+  const [minutes, setMinutes] = useState(15);
   useEffect(() => {
     if (!open) return;
     setTitle(quest?.title ?? ""); setDescription(quest?.description ?? "");
-    setCategory(quest?.category ?? "Knowledge"); setDifficulty(quest?.difficulty ?? "medium"); setXp(quest?.xp ?? 20);
+    setCategory(quest?.category ?? "Knowledge"); setDifficulty(quest?.difficulty ?? "medium"); setXp(quest?.xp ?? 20); setTag(quest?.tag ?? "Consistency"); setMinutes(quest?.minutes ?? 15);
   }, [open, quest]);
-  const valid = title.trim().length > 0 && Number.isFinite(xp) && xp >= 1 && xp <= 500;
+  const valid = title.trim().length > 0 && Number.isFinite(xp) && xp >= 1 && xp <= 500 && Number.isFinite(minutes) && minutes >= 1 && minutes <= 240;
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!valid) return;
-    onSave({ title, description, category, difficulty, xp: Math.round(xp) });
+    onSave({ title, description, category, difficulty, xp: Math.round(xp), tag, minutes: Math.round(minutes) });
     onOpenChange(false);
   };
   return (
@@ -42,6 +44,14 @@ export function QuestDialog({ open, onOpenChange, quest, onSave }: { open: boole
             </label>
             <label className="block space-y-1.5 text-sm"><span>XP reward</span>
               <input type="number" min={1} max={500} className={fieldCls} value={xp} onChange={(e) => setXp(Number(e.target.value))} />
+            </label>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block space-y-1.5 text-sm"><span>Behavior tag</span>
+              <select className={fieldCls} value={tag} onChange={(e) => setTag(e.target.value as Tag)}>{TAGS.map((t) => <option key={t}>{t}</option>)}</select>
+            </label>
+            <label className="block space-y-1.5 text-sm"><span>Duration (min)</span>
+              <input type="number" min={1} max={240} className={fieldCls} value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} />
             </label>
           </div>
           <fieldset className="space-y-1.5 text-sm"><legend className="mb-1.5">Difficulty</legend>
