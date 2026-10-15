@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 
-/** ASCEND emblem: an ascending path forming a peak with a spark at its base. */
+/** THE DAILY WAR emblem: a peak with a spark at its base. */
 export function Emblem({ className }: { className?: string }) {
   const id = useId();
   return (
@@ -23,8 +23,8 @@ export function Wordmark({ className, tagline }: { className?: string; tagline?:
     <div className={cn("flex items-center gap-2.5", className)}>
       <Emblem />
       <div>
-        <div className="font-display text-xl font-bold tracking-[0.18em] text-foreground">ASCEND</div>
-        {tagline && <div className="text-[11px] leading-tight text-muted-foreground">Forge Your Mind. Shape Your Legend.</div>}
+        <div className="font-display text-xl font-bold tracking-[0.12em] whitespace-nowrap text-foreground">THE DAILY WAR</div>
+        {tagline && <div className="text-[11px] leading-tight text-muted-foreground">Win the Day. Become Stronger.</div>}
       </div>
     </div>
   );

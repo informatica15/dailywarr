@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/quests")({
   head: () => ({
     meta: [
-      { title: "Quest Board — ASCEND" },
-      { name: "description", content: "Plan, create and complete your daily quests in ASCEND." },
-      { property: "og:title", content: "Quest Board — ASCEND" },
+      { title: "Quest Board — The Daily War" },
+      { name: "description", content: "Plan, create and complete your daily quests in The Daily War." },
+      { property: "og:title", content: "Quest Board — The Daily War" },
       { property: "og:description", content: "Plan, create and complete your daily quests." },
     ],
   }),

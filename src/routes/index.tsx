@@ -9,9 +9,9 @@ import { GAME_INFO } from "@/components/brain/data";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dashboard — ASCEND" },
-      { name: "description", content: "Your level, XP, streaks and today's quests in ASCEND." },
-      { property: "og:title", content: "Dashboard — ASCEND" },
+      { title: "Dashboard — The Daily War" },
+      { name: "description", content: "Your level, XP, streaks and today's quests in The Daily War." },
+      { property: "og:title", content: "Dashboard — The Daily War" },
       { property: "og:description", content: "Every quest builds a stronger you." },
     ],
   }),
@@ -39,7 +39,7 @@ function Dashboard() {
             <Avatar id={state.avatar} size="lg" />
           </div>
           <div className="flex-1">
-            <div className="text-sm text-muted-foreground">Every legend begins with one quest.</div>
+            <div className="text-sm text-muted-foreground">Every small victory builds a stronger you.</div>
             <h1 className="mt-1 font-display text-3xl font-bold tracking-tight md:text-4xl">{state.playerName}</h1>
             <div className="tnum mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
               <span className="font-semibold text-primary">Level {String(lv.level).padStart(2, "0")} — {titleFor(lv.level)}</span>

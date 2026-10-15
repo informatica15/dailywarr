@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/hall-of-flames")({
   head: () => ({
     meta: [
-      { title: "Hall of Flames — ASCEND" },
-      { name: "description", content: "Your unlocked and locked achievement flames in ASCEND." },
-      { property: "og:title", content: "Hall of Flames — ASCEND" },
+      { title: "Hall of Flames — The Daily War" },
+      { name: "description", content: "Your unlocked and locked achievement flames in The Daily War." },
+      { property: "og:title", content: "Hall of Flames — The Daily War" },
       { property: "og:description", content: "Your unlocked and locked achievement flames." },
     ],
   }),
@@ -21,7 +21,7 @@ const TIER: Record<Tier, { ring: string; glow: string; text: string }> = {
   Ember: { ring: "border-primary/30", glow: "bg-primary/15", text: "text-primary" },
   Flame: { ring: "border-primary/50", glow: "bg-primary/25", text: "text-primary" },
   Inferno: { ring: "border-destructive/50", glow: "bg-destructive/20", text: "text-destructive" },
-  Ascendant: { ring: "border-magic/60", glow: "bg-magic/25", text: "text-magic" },
+  Legend: { ring: "border-magic/60", glow: "bg-magic/25", text: "text-magic" },
 };
 
 function Hall() {

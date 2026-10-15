@@ -98,28 +98,28 @@
 }
 
 .dark {
-  --background: oklch(0.145 0.018 285);      /* #0B0B12 */
-  --surface: oklch(0.18 0.022 280);          /* #11121D */
-  --foreground: oklch(0.965 0.008 300);      /* #F5F3FA */
-  --card: oklch(0.215 0.028 278);            /* #171927 */
+  --background: oklch(0.155 0.01 275);       /* #0D0E13 */
+  --surface: oklch(0.185 0.015 278);
+  --foreground: oklch(0.968 0.006 90);       /* #F6F4EF */
+  --card: oklch(0.215 0.02 280);             /* #191A24 */
   --card-foreground: oklch(0.965 0.008 300);
   --popover: oklch(0.215 0.028 278);
   --popover-foreground: oklch(0.965 0.008 300);
-  --raised: oklch(0.27 0.038 278);           /* #202337 */
-  --primary: oklch(0.83 0.15 72);            /* amber #FFB547 */
+  --raised: oklch(0.255 0.025 278);          /* #222431 */
+  --primary: oklch(0.81 0.135 78);            /* gold #F2B84B */
   --primary-foreground: oklch(0.18 0.03 60);
-  --magic: oklch(0.7 0.15 288);              /* violet #9B8AFF */
+  --magic: oklch(0.66 0.14 288);              /* violet #9585E8 */
   --magic-foreground: oklch(0.15 0.02 285);
   --focus: oklch(0.82 0.09 195);             /* cyan #73D6D8 */
   --secondary: oklch(0.27 0.038 278);
   --secondary-foreground: oklch(0.965 0.008 300);
   --muted: oklch(0.27 0.038 278);
-  --muted-foreground: oklch(0.74 0.025 285); /* #A7A8BC */
+  --muted-foreground: oklch(0.75 0.018 285); /* #AFB0BE */
   --accent: oklch(0.7 0.15 288);
   --accent-foreground: oklch(0.15 0.02 285);
   --destructive: oklch(0.66 0.2 22);
   --destructive-foreground: oklch(0.98 0 0);
-  --success: oklch(0.78 0.14 160);
+  --success: oklch(0.76 0.11 160);
   --border: oklch(0.78 0.06 290 / 16%);
   --input: oklch(0.78 0.06 290 / 22%);
   --ring: oklch(0.82 0.09 195);
@@ -131,7 +131,7 @@
   --sidebar-accent-foreground: oklch(0.965 0.008 300);
   --sidebar-border: oklch(0.78 0.06 290 / 14%);
   --sidebar-ring: oklch(0.82 0.09 195);
-  --shadow-glow: 0 0 32px -6px color-mix(in oklab, var(--primary) 55%, transparent);
+  --shadow-glow: 0 0 24px -8px color-mix(in oklab, var(--primary) 40%, transparent);
   --shadow-magic: 0 0 40px -10px color-mix(in oklab, var(--magic) 60%, transparent);
   --shadow-card: 0 1px 0 0 oklch(1 0 0 / 4%) inset, 0 20px 40px -24px oklch(0 0 0 / 70%);
   --gradient-xp: linear-gradient(90deg, var(--magic), var(--primary));

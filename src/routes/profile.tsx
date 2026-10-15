@@ -13,9 +13,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Profile — ASCEND" },
-      { name: "description", content: "Customize your character, sound and display settings in ASCEND." },
-      { property: "og:title", content: "Profile — ASCEND" },
+      { title: "Profile — The Daily War" },
+      { name: "description", content: "Customize your character, sound and display settings in The Daily War." },
+      { property: "og:title", content: "Profile — The Daily War" },
       { property: "og:description", content: "Customize your character, sound and display settings." },
     ],
   }),
@@ -41,7 +41,7 @@ function Profile() {
   const exportData = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = `ascend-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+    a.href = URL.createObjectURL(blob); a.download = `daily-war-backup-${new Date().toISOString().slice(0, 10)}.json`; a.click();
     URL.revokeObjectURL(a.href);
   };
 

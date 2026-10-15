@@ -10,9 +10,9 @@ export const Route = createFileRoute("/arena")({
     GAME_IDS.includes(s["game"] as GameId) ? { game: s["game"] as GameId } : {},
   head: () => ({
     meta: [
-      { title: "Brain Arena — ASCEND" },
+      { title: "Brain Arena — The Daily War" },
       { name: "description", content: "Train your focus. Challenge your thinking." },
-      { property: "og:title", content: "Brain Arena — ASCEND" },
+      { property: "og:title", content: "Brain Arena — The Daily War" },
       { property: "og:description", content: "Train your focus. Challenge your thinking." },
     ],
   }),

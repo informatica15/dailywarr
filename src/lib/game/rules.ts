@@ -8,6 +8,9 @@ const LEGACY_CATEGORY: Record<string, Category> = { Mind: "Mindfulness", Craft: 
 export const DIFFICULTIES = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
+export const TAGS = ["Focus", "Confidence", "Consistency", "Creativity", "Problem-solving"] as const;
+export type Tag = (typeof TAGS)[number];
+
 export interface Quest {
   id: string;
   title: string;
@@ -15,6 +18,9 @@ export interface Quest {
   category: Category;
   xp: number;
   difficulty: Difficulty;
+  tag: Tag;
+  /** estimated duration in minutes */
+  minutes: number;
   recurrence: "daily";
   status: "active" | "paused";
   starter: boolean;
@@ -50,7 +56,7 @@ export interface GameState {
   settings: Settings;
 }
 
-export const AVATARS = ["flame", "spark", "moon", "summit", "feather", "compass"] as const;
+export const AVATARS = ["warrior", "knight", "mage", "ranger", "flame", "spark", "moon", "summit", "feather", "compass"] as const;
 export const SPECIALIZATIONS = ["Scholar", "Warrior", "Sage", "Artisan", "Orator"] as const;
 
 export const defaultSettings = (): Settings => ({ music: false, musicVolume: 0.4, sfx: true, sfxVolume: 0.6, ambient: true, reducedMotion: false });
@@ -63,13 +69,13 @@ export const newId = () =>
     ? crypto.randomUUID()
     : `id_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 
-const STARTERS: Array<Pick<Quest, "title" | "description" | "category" | "xp" | "difficulty">> = [
-  { title: "The Codebreaker", description: "Solve one Python problem.", category: "Coding", xp: 30, difficulty: "hard" },
-  { title: "Mindful Momentum", description: "Ten minutes of mindful reflection.", category: "Mindfulness", xp: 15, difficulty: "easy" },
-  { title: "Wordsmith", description: "Practice English speaking for ten minutes.", category: "Communication", xp: 20, difficulty: "medium" },
-  { title: "The Reading Rune", description: "Read for fifteen minutes.", category: "Knowledge", xp: 20, difficulty: "medium" },
-  { title: "Body in Motion", description: "Fifteen minutes of movement.", category: "Fitness", xp: 20, difficulty: "medium" },
-  { title: "Creative Spark", description: "Create or sketch one new idea.", category: "Creativity", xp: 15, difficulty: "easy" },
+const STARTERS: Array<Pick<Quest, "title" | "description" | "category" | "xp" | "difficulty" | "tag" | "minutes">> = [
+  { title: "The Codebreaker", description: "Solve one Python problem.", category: "Coding", xp: 30, difficulty: "hard", tag: "Problem-solving", minutes: 25 },
+  { title: "Mindful Momentum", description: "Ten minutes of mindful reflection.", category: "Mindfulness", xp: 15, difficulty: "easy", tag: "Focus", minutes: 10 },
+  { title: "Wordsmith", description: "Practice English speaking for ten minutes.", category: "Communication", xp: 20, difficulty: "medium", tag: "Confidence", minutes: 10 },
+  { title: "The Reading Rune", description: "Read for fifteen minutes.", category: "Knowledge", xp: 20, difficulty: "medium", tag: "Consistency", minutes: 15 },
+  { title: "Body in Motion", description: "Fifteen minutes of movement.", category: "Fitness", xp: 20, difficulty: "medium", tag: "Consistency", minutes: 15 },
+  { title: "Creative Spark", description: "Create or sketch one new idea.", category: "Creativity", xp: 15, difficulty: "easy", tag: "Creativity", minutes: 10 },
 ];
 
 export const starterQuests = (): Quest[] =>
@@ -77,8 +83,8 @@ export const starterQuests = (): Quest[] =>
 
 export const initialState = (): GameState => ({
   version: 2,
-  playerName: "Wayfarer",
-  avatar: "flame",
+  playerName: "Warrior",
+  avatar: "warrior",
   specialization: "Scholar",
   seeded: false,
   quests: [],
@@ -108,7 +114,7 @@ export function levelInfo(totalXp: number) {
   return { level, into: remaining, needed, pct: (remaining / needed) * 100 };
 }
 
-const TITLES: Array<[number, string]> = [[12, "Ascendant"], [8, "Flamebearer"], [5, "Pathforger"], [3, "Seeker"], [1, "Wayfinder"]];
+const TITLES: Array<[number, string]> = [[12, "Warlord"], [8, "Flamebearer"], [5, "Pathforger"], [3, "Seeker"], [1, "Wayfinder"]];
 export const titleFor = (level: number) => TITLES.find(([l]) => level >= l)![1];
 
 export function achievementXp(s: GameState) {
@@ -157,7 +163,7 @@ export function bestStreak(s: GameState) {
   return best;
 }
 
-export type Tier = "Ember" | "Flame" | "Inferno" | "Ascendant";
+export type Tier = "Ember" | "Flame" | "Inferno" | "Legend";
 export interface Achievement { id: string; title: string; description: string; tier: Tier; reward: number; group: string; check: (s: GameState) => boolean }
 
 const nQ = (s: GameState) => Object.keys(s.completions).length;
@@ -168,14 +174,14 @@ export const ACHIEVEMENTS: Achievement[] = [
   { id: "fifty-quests", title: "Unbroken Will", description: "Complete 50 quests.", tier: "Inferno", reward: 150, group: "Habits", check: (s) => nQ(s) >= 50 },
   { id: "streak-3", title: "Kindled Flame", description: "Reach a 3-day streak.", tier: "Ember", reward: 50, group: "Consistency", check: (s) => bestStreak(s) >= 3 },
   { id: "streak-7", title: "Steady Blaze", description: "Reach a 7-day streak.", tier: "Flame", reward: 100, group: "Consistency", check: (s) => bestStreak(s) >= 7 },
-  { id: "streak-30", title: "Eternal Fire", description: "Reach a 30-day streak.", tier: "Ascendant", reward: 300, group: "Consistency", check: (s) => bestStreak(s) >= 30 },
+  { id: "streak-30", title: "Eternal Fire", description: "Reach a 30-day streak.", tier: "Legend", reward: 300, group: "Consistency", check: (s) => bestStreak(s) >= 30 },
   { id: "level-5", title: "Rising Legend", description: "Reach level 5 through quests and training.", tier: "Flame", reward: 100, group: "Growth", check: (s) => lvl(s) >= 5 },
   { id: "level-10", title: "Living Legend", description: "Reach level 10 through quests and training.", tier: "Inferno", reward: 200, group: "Growth", check: (s) => lvl(s) >= 10 },
   { id: "memory-spark", title: "Memory Spark", description: "Complete a Memory Sequence session.", tier: "Ember", reward: 20, group: "Brain Arena", check: (s) => (s.brain.completed.memory ?? 0) >= 1 },
   { id: "pattern-seeker", title: "Pattern Seeker", description: "Solve five pattern puzzles.", tier: "Ember", reward: 20, group: "Brain Arena", check: (s) => s.brain.patternSolved >= 5 },
   { id: "logic-adept", title: "Logic Adept", description: "Complete a Logic Chamber session.", tier: "Ember", reward: 20, group: "Brain Arena", check: (s) => (s.brain.completed.logic ?? 0) >= 1 },
   { id: "quick-reflex", title: "Quick Reflex", description: "Complete a Reaction Rift session.", tier: "Ember", reward: 20, group: "Brain Arena", check: (s) => (s.brain.completed.reaction ?? 0) >= 1 },
-  { id: "mind-ascendant", title: "Mind Ascendant", description: "Complete all four Brain Arena games.", tier: "Ascendant", reward: 100, group: "Brain Arena", check: (s) => GAME_IDS.every((g) => (s.brain.completed[g] ?? 0) >= 1) },
+  { id: "mind-ascendant", title: "Mind Ascendant", description: "Complete all four Brain Arena games.", tier: "Legend", reward: 100, group: "Brain Arena", check: (s) => GAME_IDS.every((g) => (s.brain.completed[g] ?? 0) >= 1) },
 ];
 
 /** Achievements are permanent once earned; reward granted exactly once. */
@@ -261,6 +267,8 @@ export function sanitize(raw: unknown): GameState {
         id: q["id"], title: q["title"].slice(0, 80),
         description: typeof q["description"] === "string" ? q["description"].slice(0, 200) : "",
         category, xp: Math.min(500, Math.round(xp)),
+        tag: (TAGS as readonly string[]).includes(String(q["tag"])) ? (q["tag"] as Tag) : "Consistency",
+        minutes: Number(q["minutes"]) >= 1 ? Math.min(240, Math.round(Number(q["minutes"]))) : 15,
         difficulty: (DIFFICULTIES as readonly string[]).includes(String(q["difficulty"])) ? (q["difficulty"] as Difficulty) : "medium",
         recurrence: "daily",
         status: q["status"] === "paused" ? "paused" : "active",
