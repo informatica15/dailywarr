@@ -9,7 +9,7 @@ import { playSfx, setMusicVolume, startMusic, stopMusic } from "../sound";
 // Same key as v1 so existing progress is migrated in place, never reset.
 const KEY = "habit-quest-rpg:v1";
 
-export type QuestInput = Pick<Quest, "title" | "description" | "category" | "xp" | "difficulty">;
+export type QuestInput = Pick<Quest, "title" | "description" | "category" | "xp" | "difficulty" | "tag" | "minutes">;
 
 interface Ctx {
   state: GameState;
@@ -120,7 +120,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState((s) => toggleQuest(s, id, todayKey()));
   }, [sfx]);
   const setProfile = useCallback((p: { name: string; avatar: string; specialization: string }) =>
-    setState((s) => applyAchievements({ ...s, playerName: p.name.trim() || "Wayfarer", avatar: p.avatar, specialization: p.specialization })), []);
+    setState((s) => applyAchievements({ ...s, playerName: p.name.trim() || "Warrior", avatar: p.avatar, specialization: p.specialization })), []);
   const claimBrain = useCallback((sessionId: string, game: GameId, score: number, extra?: { patternSolved?: number }) => {
     const { state: next, result } = claimBrainSession(stateRef.current, sessionId, game, score, extra);
     if (result.ok) { stateRef.current = next; setState(next); }

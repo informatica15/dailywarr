@@ -73,9 +73,10 @@ export function QuestCard({ quest, done, onToggle, onEdit, onDelete, onPause }: 
           {paused && <span className="rounded-md bg-raised px-1.5 py-0.5 text-[10px] text-muted-foreground">Paused</span>}
         </div>
         {quest.description && <div className="truncate text-sm text-muted-foreground">{quest.description}</div>}
-        <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1"><Icon className="h-3 w-3" />{quest.category}</span>
-          <span>Daily</span>
+          <span className="rounded-md bg-magic/10 px-1.5 py-0.5 text-magic">{quest.tag}</span>
+          <span className="tnum">{quest.minutes} min</span>
           <DifficultyPips d={quest.difficulty} />
         </div>
       </div>
