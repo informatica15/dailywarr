@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
-import { Brain, Flame, LayoutDashboard, ScrollText, Settings, User } from "lucide-react";
+import { Brain, Cloud, CloudAlert, CloudOff, Flame, LayoutDashboard, ScrollText, Settings, User } from "lucide-react";
 import { useEffect } from "react";
 import { useGame } from "@/lib/game/store";
 import { levelInfo, titleFor, totalXp } from "@/lib/game/rules";
@@ -51,6 +51,7 @@ export function AppShell() {
             </div>
             <XpBar pct={lv.pct} className="mt-3 h-1.5" />
           </Link>
+          <AccountChip />
           <div className="flex items-center justify-between">
             <SoundControl />
             <Link to="/profile" hash="settings" aria-label="Settings" className="grid h-9 w-9 place-items-center rounded-lg text-muted-foreground hover:bg-raised hover:text-foreground"><Settings className="h-4 w-4" /></Link>
@@ -60,7 +61,7 @@ export function AppShell() {
 
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/70 px-4 py-2.5 backdrop-blur-xl md:hidden">
         <Wordmark />
-        <SoundControl compact />
+        <div className="flex items-center gap-1"><AccountChip compact /><SoundControl compact /></div>
       </header>
 
       <main className="relative flex-1 pb-28 md:pb-10">
@@ -79,5 +80,18 @@ export function AppShell() {
       </nav>
       <LevelUpOverlay />
     </div>
+  );
+}
+
+function AccountChip({ compact }: { compact?: boolean }) {
+  const { user, sync } = useGame();
+  const Icon = !user ? CloudOff : sync === "error" ? CloudAlert : Cloud;
+  const label = !user ? "Sign in to save" : sync === "error" ? "Save failed" : sync === "syncing" ? "Saving…" : "Saved to account";
+  return (
+    <Link to="/auth" aria-label={label} title={label}
+      className={compact ? "grid h-9 w-9 place-items-center rounded-lg text-muted-foreground hover:bg-raised hover:text-foreground"
+        : "flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-raised hover:text-foreground"}>
+      <Icon className={`h-4 w-4 ${user && sync !== "error" ? "text-primary" : ""}`} />{!compact && label}
+    </Link>
   );
 }
