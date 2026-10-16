@@ -5,6 +5,8 @@ import {
   type ClaimResult, type GameId, type GameState, type Quest, type Settings,
 } from "./rules";
 import { playSfx, setMusicVolume, startMusic, stopMusic } from "../sound";
+import { supabase } from "@/integrations/supabase/client";
+import { loadCloud, saveCloud } from "./cloud";
 
 // Same key as v1 so existing progress is migrated in place, never reset.
 const KEY = "habit-quest-rpg:v1";
@@ -27,7 +29,11 @@ interface Ctx {
   sfx: (name: Parameters<typeof playSfx>[0]) => void;
   musicError: boolean;
   reset: () => void;
+  user: { id: string; email: string | null } | null;
+  sync: SyncStatus;
+  signOut: () => Promise<void>;
 }
+export type SyncStatus = "local" | "syncing" | "synced" | "error";
 
 const GameCtx = createContext<Ctx | null>(null);
 
@@ -52,6 +58,44 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState(seedIfNeeded(s));
     setLoaded(true);
   }, []);
+
+  // Account sync: cloud save wins when present; otherwise this device's progress is uploaded.
+  const [user, setUser] = useState<{ id: string; email: string | null } | null>(null);
+  const [sync, setSync] = useState<SyncStatus>("local");
+  const cloudReady = useRef<string | null>(null);
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user ? { id: data.user.id, email: data.user.email ?? null } : null));
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      const u = session?.user;
+      setUser((cur) => (u ? (cur?.id === u.id ? cur : { id: u.id, email: u.email ?? null }) : null));
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
+  useEffect(() => {
+    if (!loaded) return;
+    if (!user) { cloudReady.current = null; setSync("local"); return; }
+    let cancelled = false;
+    setSync("syncing");
+    loadCloud(user.id)
+      .then(async (remote) => {
+        if (cancelled) return;
+        if (remote) { prev.current = null; stateRef.current = remote; setState(remote); }
+        else await saveCloud(user.id, stateRef.current);
+        cloudReady.current = user.id; setSync("synced");
+      })
+      .catch(() => { if (!cancelled) setSync("error"); });
+    return () => { cancelled = true; };
+  }, [user, loaded]);
+  useEffect(() => {
+    if (!user || cloudReady.current !== user.id) return;
+    setSync("syncing");
+    const t = window.setTimeout(() => {
+      saveCloud(user.id, state).then(() => setSync("synced")).catch(() => setSync("error"));
+    }, 800);
+    return () => clearTimeout(t);
+  }, [state, user]);
+  const signOut = useCallback(async () => { await supabase.auth.signOut(); }, []);
 
   const sfx = useCallback((name: Parameters<typeof playSfx>[0]) => {
     const st = stateRef.current.settings;
@@ -132,7 +176,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <GameCtx.Provider value={{ state, loaded, saveError, levelUp, dismissLevelUp: () => setLevelUp(null), addQuest, updateQuest, deleteQuest, toggle, setProfile, setSettings, claimBrain, sfx, musicError, reset }}>
+    <GameCtx.Provider value={{ state, loaded, saveError, levelUp, dismissLevelUp: () => setLevelUp(null), addQuest, updateQuest, deleteQuest, toggle, setProfile, setSettings, claimBrain, sfx, musicError, reset, user, sync, signOut }}>
       {children}
     </GameCtx.Provider>
   );
