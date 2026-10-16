@@ -73,7 +73,7 @@ function Dashboard() {
         <Stat icon={Trophy} label="Best streak" value={<>{bestStreak(state)}<span className="text-base text-muted-foreground"> days</span></>} tone="violet" />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid gap-6 lg:grid-cols-[1fr_340px] [&>*]:min-w-0">
         <Panel title="Today's Battle" action={<Link to="/quests" className="inline-flex items-center gap-1 text-sm text-magic hover:underline">Quest Board <ArrowRight className="h-3.5 w-3.5" /></Link>}>
           {!loaded ? <div className="h-40 animate-pulse rounded-xl bg-raised/40" /> : active.length === 0 ? (
             <Empty icon={ScrollText} title="No active quests">
