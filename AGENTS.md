@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Game rules live in src/lib/game/rules.ts (pure functions); React state/localStorage persistence in src/lib/game/store.tsx. Why: keeps rules testable and UI-free.
+- Signed-in players' full game state lives in one cloud row per user (game_saves); cloud copy wins on sign-in, local copy is uploaded if none. Why: simple cross-device sync without reshaping rules.
